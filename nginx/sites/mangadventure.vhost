@@ -1,0 +1,96 @@
+map $request_uri      $cache_control {
+    default           "";
+    ~^/media/         "public; max-age=2628000";
+    ~^/static/        "public; max-age=604800";
+    ~^/\.well-known/  "public; max-age=604800";
+}
+
+server {
+    listen       80;
+    listen  [::]:80;
+
+    return 301  https://$host$request_uri;
+}
+
+server {
+    listen       443 http3 reuseport;
+    listen       443 http2 ssl;
+    listen  [::]:443 http3 reuseport;
+    listen  [::]:443 http2 ssl;
+
+    # MUST BE SET!!
+    server_name  "";
+
+    access_log  /var/log/nginx/static.log static;
+    error_log   /var/log/nginx/errors.log warn;
+
+    vhost_traffic_status  on;
+
+    if_modified_since  before;
+
+    # MUST BE SET!!
+    ssl_certificate          "";
+    # MUST BE SET!!
+    ssl_certificate_key      "";
+
+    add_header Cache-Control              $cache_control always;
+    add_header X-Cache-Status             $upstream_cache_status;
+    add_header Alt-Svc                    'h3=":443"; ma=3600, h3-29=":443"; ma=3600';
+
+    error_page 404  @404;
+    error_page 503  @503;
+
+    location /__status__ {
+        auth_basic            "site status";
+        auth_basic_user_file  /run/secrets/status_auth;
+
+        vhost_traffic_status_display;
+        vhost_traffic_status_display_format html;
+    }
+
+    location /.well-known {
+        etag   on;
+        alias  /web/.well-known;
+    }
+
+    location /static {
+        etag   on;
+        alias  /web/static;
+    }
+
+    location /media  {
+        etag   on;
+        alias  /web/media;
+    }
+
+    location = /favicon.ico {
+        access_log  off;
+        return 301  https://$host/media/favicon.ico;
+    }
+
+    location / {
+        access_log   /var/log/nginx/access.log uwsgi;
+
+        http2_push_preload  on;
+        http3_push_preload  on;
+
+        include uwsgi_params;
+
+        uwsgi_pass               uwsgi://mangadventure:3000;
+        uwsgi_request_buffering  off;
+        uwsgi_ignore_headers     Set-Cookie;
+        uwsgi_cache              microcache;
+        uwsgi_cache_key          $uri$is_args$args;
+        uwsgi_cache_valid        200 60s;
+    }
+
+    location @404 {
+        return 404 "Nothing to see here.\n";
+    }
+
+    location @503 {
+        return 503 "The server is momentarily unavailable.\n";
+    }
+}
+
+# vim:ft=nginx:

@@ -1,0 +1,26 @@
+# OS stuff
+.directory
+desktop.ini
+Thumbs.db
+.DS_Store
+
+# Editor stuff
+.idea/
+.settings/
+.classpath
+.project
+*.pydevproject
+*.cache
+*.sublime-workspace
+*.sublime-project
+.*vimrc
+*.swp
+*~
+
+# Docker stuff
+media/
+static/
+nginx/logs/
+nginx/certs/
+.well-known/
+status_auth.txt
