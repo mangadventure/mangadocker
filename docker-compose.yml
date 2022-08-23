@@ -14,13 +14,26 @@ services:
     expose: [5432]
     healthcheck:
       test: ['CMD', 'pg_isready', '-U$POSTGRES_USER']
-      interval: 10s
-      timeout: 3s
-      retries: 3
+    stop_grace_period: 30s
     networks:
       - manganet
     volumes:
       - pgdata:/var/lib/postgresql/data
+
+  redis:
+    container_name: redis
+    image: redis:7.0-alpine
+    restart: always
+    ports:
+      - 6379:6379
+    expose: [6379]
+    command: ['--save', '1800 1 600 100 120 1000']
+    healthcheck:
+       test: ['CMD', 'redis-cli', 'ping']
+    networks:
+      - manganet
+    volumes:
+      - redisdata:/data
 
   nginx:
     container_name: nginx_custom
@@ -48,6 +61,8 @@ services:
     depends_on:
       postgresdb:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     env_file:
       - env/database.env
       - env/mangadventure.env
@@ -70,6 +85,7 @@ networks:
     name: manganet
 
 volumes:
+  redisdata:
   pgdata:
   logs:
   static:

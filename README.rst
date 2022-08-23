@@ -9,6 +9,7 @@ Components
 
 * nginx_
 * PostgreSQL_
+* Redis_
 * MangAdventure_
 
 All images use Alpine Linux.
@@ -40,8 +41,8 @@ __ https://www.iana.org/assignments/well-known-uris/well-known-uris.xhtml
 
 ----
 
-The file ``status_auth.txt`` is required in order
-to set up the site status (``/__status__``). |br|
+The file ``status_auth.txt`` is required
+in order to set up ``/__status__``. |br|
 You can create it with the following command:
 
 .. code:: shell
@@ -59,7 +60,7 @@ Next, edit the following files as needed:
 
 * ``env/database.env``
 * ``env/mangadventure.env``
-* ``nginx/sites/mangadventure.vhost``
+* ``nginx/sites/mangadventure.nginx``
 
 Some settings are empty and must be set.
 
@@ -82,6 +83,7 @@ You can write your own styles in ``static/extra/style.scss`` and restart it:
 .. _nginx: https://github.com/mangadventure/nginx
 .. _docker-compose: https://docs.docker.com/compose/
 .. _PostgreSQL: https://hub.docker.com/_/postgres
+.. _Redis: https://hub.docker.com/_/redis
 
 .. |br| raw:: html
 

@@ -1,8 +1,8 @@
 map $request_uri      $cache_control {
     default           "";
-    ~^/media/         "public; max-age=2628000";
-    ~^/static/        "public; max-age=604800";
-    ~^/\.well-known/  "public; max-age=604800";
+    ~^/media/         "public, max-age=2628000, immutable, no-transform";
+    ~^/static/        "public, max-age=604800, immutable";
+    ~^/\.well-known/  "public, max-age=1209600, immutable";
 }
 
 server {
@@ -33,6 +33,7 @@ server {
     # MUST BE SET!!
     ssl_certificate_key      "";
 
+    add_header X-Frame-Options            'DENY' always;
     add_header Cache-Control              $cache_control always;
     add_header X-Cache-Status             $upstream_cache_status;
     add_header Alt-Svc                    'h3=":443"; ma=3600, h3-29=":443"; ma=3600';
@@ -81,7 +82,7 @@ server {
         uwsgi_ignore_headers     Set-Cookie;
         uwsgi_cache              microcache;
         uwsgi_cache_key          $uri$is_args$args;
-        uwsgi_cache_valid        200 60s;
+        uwsgi_cache_valid        200 120s;
     }
 
     location @404 {
@@ -92,5 +93,3 @@ server {
         return 503 "The server is momentarily unavailable.\n";
     }
 }
-
-# vim:ft=nginx:
