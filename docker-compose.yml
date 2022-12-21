@@ -37,7 +37,7 @@ services:
 
   nginx:
     container_name: nginx_custom
-    image: ghcr.io/mangadventure/nginx:f9d7930d0eed
+    image: ghcr.io/mangadventure/nginx:91ad1abfb285
     restart: always
     depends_on:
       mangadventure:

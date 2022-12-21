@@ -72,9 +72,6 @@ server {
     location / {
         access_log   /var/log/nginx/access.log uwsgi;
 
-        http2_push_preload  on;
-        http3_push_preload  on;
-
         include uwsgi_params;
 
         uwsgi_pass               uwsgi://mangadventure:3000;
