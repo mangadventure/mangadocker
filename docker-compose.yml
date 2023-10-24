@@ -1,11 +1,11 @@
 version: '3.8'
 
-name: MangAdventure
+name: mangadventure
 
 services:
   postgresdb:
     container_name: postgresdb
-    image: postgres:14-alpine
+    image: postgres:15-alpine
     restart: always
     env_file:
       - env/database.env
@@ -22,7 +22,7 @@ services:
 
   redis:
     container_name: redis
-    image: redis:7.0-alpine
+    image: redis:7.2-alpine
     restart: always
     ports:
       - 6379:6379
