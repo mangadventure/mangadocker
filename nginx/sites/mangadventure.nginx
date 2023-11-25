@@ -1,8 +1,8 @@
 map $request_uri      $cache_control {
-    default           "";
-    ~^/media/         "public, max-age=2628000, immutable, no-transform";
-    ~^/static/        "public, max-age=604800, immutable";
-    ~^/\.well-known/  "public, max-age=1209600, immutable";
+    default            "";
+    ~^/media/          "public, max-age=2628000, immutable, no-transform";
+    ~^/static/         "public, max-age=604800, immutable";
+    ~^/[.]well-known/  "public, max-age=1209600, immutable";
 }
 
 server {
@@ -13,10 +13,13 @@ server {
 }
 
 server {
-    listen       443 http3 reuseport;
-    listen       443 http2 ssl;
-    listen  [::]:443 http3 reuseport;
-    listen  [::]:443 http2 ssl;
+    http2 on;
+    http3 on;
+
+    listen       443 quic reuseport;
+    listen       443 ssl;
+    listen  [::]:443 quic reuseport;
+    listen  [::]:443 ssl;
 
     # MUST BE SET!!
     server_name  "";
