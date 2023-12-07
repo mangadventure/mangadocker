@@ -9,11 +9,12 @@ Thumbs.db
 .settings/
 .classpath
 .project
+.nvim.lua
+.nvimrc
 *.pydevproject
 *.cache
 *.sublime-workspace
 *.sublime-project
-.*vimrc
 *.swp
 *~
 

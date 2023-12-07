@@ -42,6 +42,7 @@ server {
     add_header Alt-Svc                    'h3=":443"; ma=3600, h3-29=":443"; ma=3600';
 
     error_page 404  @404;
+    error_page 502  @502;
     error_page 503  @503;
 
     location /__status__ {
@@ -86,10 +87,14 @@ server {
     }
 
     location @404 {
-        return 404 "Nothing to see here.\n";
+        return 404 "Nothing to see here.";
+    }
+
+    location @502 {
+        return 502 "The website is momentarily unavailable.";
     }
 
     location @503 {
-        return 503 "The server is momentarily unavailable.\n";
+        return 503 "The server is currently undergoing maintenance.";
     }
 }
