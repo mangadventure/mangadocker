@@ -75,14 +75,14 @@ Now, you can start the containers:
 
 .. code:: bash
 
-   docker-compose up
+   docker compose up
 
 Once the site has been set up, static files will be copied to ``static``. |br|
-You can write your own styles in ``static/extra/style.scss`` and restart it:
+You can write your own styles in ``static/styles/extra.scss`` and compile it:
 
 .. code:: bash
 
-   docker-compose restart mangadventure
+   docker compose exec mangadventure mangadventure collectstatic --noinput
 
 .. _MangAdventure: https://github.com/mangadventure/MangAdventure
 .. _nginx: https://github.com/mangadventure/nginx
